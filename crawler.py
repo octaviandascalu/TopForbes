@@ -52,17 +52,17 @@ class Crawler:
         # #####################################
 
         stats = []
-        age = [None] * 50
-        source_of_wealth = [None] * 50
-        self_made_score = [None] * 50
-        philanthropy_score = [None] * 50
-        residence = [None] * 50
-        citizenship = [None] * 50
-        marital_status = [None] * 50
-        children = [None] * 50
-        education = [None] * 50
+        age = [None] * 200
+        source_of_wealth = [None] * 200
+        self_made_score = [None] * 200
+        philanthropy_score = [None] * 200
+        residence = [None] * 200
+        citizenship = [None] * 200
+        marital_status = [None] * 200
+        children = [None] * 200
+        education = [None] * 200
 
-        for i in range(50):
+        for i in range(200):
             self.driver.get(urls[i])
             time.sleep(1)
             soup = BeautifulSoup(self.driver.page_source, 'lxml')
