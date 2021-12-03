@@ -1,3 +1,4 @@
+import time
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
@@ -14,8 +15,8 @@ class Crawler:
         self.driver.find_element_by_id('truste-consent-button').click()
 
         self.soup = BeautifulSoup(self.driver.page_source, 'lxml')
-        urls = self.extractUrlsFromTable()
-        self.extractFromProfile(urls)
+        urls, name = self.extractUrlsFromTable()
+        self.extractFromProfile(urls, name)
 
     def extractUrlsFromTable(self):
         table = self.soup.find('div', attrs={'class': 'table'})
@@ -24,7 +25,7 @@ class Crawler:
 
         urls = []
         # rank = []
-        # name = []
+        name = []
         # netWorth = []
         # age = []
         # source = []
@@ -34,7 +35,7 @@ class Crawler:
             for row in group.find_all('div', attrs={'class': 'table-row'}):
                 urls.append("https://www.forbes.com/profile/" + row.get('id') + "/?list=billionaires")
                 # rank.append(row.find('div', attrs={'class': 'rank'}).get_text())
-                # name.append(row.find('div', attrs={'class': 'personName'}).get_text())
+                name.append(row.find('div', attrs={'class': 'personName'}).get_text())
                 # netWorth.append(row.find('div', attrs={'class': 'netWorth'}).get_text())
                 # age.append(row.find('div', attrs={'class': 'age'}).get_text())
                 # source.append(row.find('div', attrs={'class': 'source'}).get_text())
@@ -43,46 +44,51 @@ class Crawler:
         # data.extend([urls, rank, name, netWorth, age, source, category])
         # for field in data:
         #     print(field)
-        return urls
+        return urls, name
 
-    def extractFromProfile(self, urls):
+    def extractFromProfile(self, urls, name):
+        # ######################################
+        # Testez pe primii 50/200 pentru nereguli
+        # #####################################
+
         stats = []
-        age = []
-        source_of_wealth = []
-        self_made_score = []
-        philanthropy_score = []
-        residence = []
-        citizenship = []
-        marital_status = []
-        children = []
-        education = []
+        age = [None] * 50
+        source_of_wealth = [None] * 50
+        self_made_score = [None] * 50
+        philanthropy_score = [None] * 50
+        residence = [None] * 50
+        citizenship = [None] * 50
+        marital_status = [None] * 50
+        children = [None] * 50
+        education = [None] * 50
 
-        for i in range(1):
+        for i in range(50):
             self.driver.get(urls[i])
+            time.sleep(1)
             soup = BeautifulSoup(self.driver.page_source, 'lxml')
             block = soup.find('div', attrs={'class': 'listuser-content__block person-stats'})
             for item in block.find_all('div', attrs={'class': 'listuser-block__item'}):
                 if item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Age':
-                    age.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    age[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Source of Wealth':
-                    source_of_wealth.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    source_of_wealth[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Self-Made Score':
-                    self_made_score.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    self_made_score[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Philanthropy Score':
-                    philanthropy_score.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    philanthropy_score[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Residence':
-                    residence.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    residence[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Citizenship':
-                    citizenship.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    citizenship[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Marital Status':
-                    marital_status.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    marital_status[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Children':
-                    children.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    children[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Education':
-                    education.append(item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
+                    education[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
 
         stats.extend(
-            [age, source_of_wealth, self_made_score, philanthropy_score, residence, citizenship, marital_status,
+            [name, age, source_of_wealth, self_made_score, philanthropy_score, residence, citizenship, marital_status,
              children, education])
 
         for field in stats:
