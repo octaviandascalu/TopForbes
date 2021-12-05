@@ -7,9 +7,9 @@ from dbconnection import DbConnection
 start = time.time()
 crawler = Crawler()
 crawler.start()
-crawler.stop()
 stop = time.time()
 print("Timp:", (stop - start) // 60, "minute ", (stop - start) % 60, "secunde")
+crawler.exportExtractedStats()
 
 db_conn = DbConnection()
 db_conn.createDatabase()
