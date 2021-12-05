@@ -1,20 +1,6 @@
 import mysql.connector
 
 
-def convertToInteger(value):
-    if value is None:
-        return value
-    else:
-        return int(value)
-
-
-def convertToString(value):
-    if value is None:
-        return value
-    else:
-        return str(value)
-
-
 class DbConnection:
     def __init__(self):
         self.db = mysql.connector.connect(
@@ -27,19 +13,17 @@ class DbConnection:
         self.mycursor = self.db.cursor()
 
     def createDatabase(self):
-        self.mycursor.execute('DROP TABLE TopForbes')
+        self.mycursor.execute('DROP TABLE IF EXISTS TopForbes')
         self.mycursor.execute(
-            'CREATE TABLE TopForbes (rankID int PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50), age smallint UNSIGNED, sourceOfWealth VARCHAR(50), selfMadeScore smallint UNSIGNED, philanthropyScore smallint UNSIGNED, residence VARCHAR(50), citizenship VARCHAR(50), maritalStatus VARCHAR(50), children smallint UNSIGNED, education VARCHAR(250))')
+            "CREATE TABLE TopForbes (personID int PRIMARY KEY AUTO_INCREMENT, rankForbes smallint UNSIGNED, name VARCHAR(50), netWorth VARCHAR(10), age smallint UNSIGNED, sourceOfWealth VARCHAR(50), category VARCHAR(50), selfMadeScore smallint UNSIGNED, philanthropyScore smallint UNSIGNED, residence VARCHAR(50), citizenship VARCHAR(50), maritalStatus VARCHAR(50), children smallint UNSIGNED, education VARCHAR(250))")
 
     def insertIntoDatabase(self, stats):
         for i in range(200):
             self.mycursor.execute(
-                "INSERT INTO TopForbes (name, age, sourceOfWealth, selfMadeScore, philanthropyScore, residence, citizenship, maritalStatus, children, education) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                "INSERT INTO TopForbes (rankForbes, name, netWorth, age, sourceOfWealth, category, selfMadeScore, philanthropyScore, residence, citizenship, maritalStatus, children, education) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                 (
-                    convertToString(stats[0][i]), convertToInteger(stats[1][i]), convertToString(stats[2][i]),
-                    convertToInteger(stats[3][i]), convertToInteger(stats[4][i]),
-                    convertToString(stats[5][i]), convertToString(stats[6][i]),
-                    convertToString(stats[7][i]), convertToInteger(stats[8][i]), convertToString(stats[9][i])
+                    stats[0][i], stats[1][i], stats[2][i], stats[3][i], stats[4][i], stats[5][i], stats[6][i],
+                    stats[7][i], stats[8][i], stats[9][i], stats[10][i], stats[11][i], stats[12][i]
                 )
             )
 
