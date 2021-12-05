@@ -1,14 +1,18 @@
+import time
 from crawler import Crawler
 from dbconnection import DbConnection
-from esantionDateCrawler import stats
+# from esantionDateCrawler import stats
 
-# crawler = Crawler()
-# crawler.start()
-# crawler.stop()
+start = time.time()
+crawler = Crawler()
+crawler.start()
+crawler.stop()
+stop = time.time()
+print("Timp:", stop - start, "secunde")
 
 db_conn = DbConnection()
 db_conn.createDatabase()
-db_conn.insertIntoDatabase(stats)
+db_conn.insertIntoDatabase(crawler.exportExtractedStats())
 
 print("Top 10 tineri din Forbes:", db_conn.top10CeleMaiTineri())
 print("Top 10 filantropi din Forbes:", db_conn.top10Filantropi())
