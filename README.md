@@ -15,4 +15,8 @@ un set de functii care sa interactioneze cu baza de date.
 Site.ul suport este: https://www.forbes.com/billionaires/.
 
 INPUT: forbes.py
+
 OUTPUT: un crawler care insereaza in baza de date informatii.
+
+Observatii:
+- Crawler-ului ii ia in medie 7 min si 20 de sec sa extraga info
