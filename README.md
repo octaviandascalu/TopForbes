@@ -19,4 +19,4 @@ INPUT: forbes.py
 OUTPUT: un crawler care insereaza in baza de date informatii.
 
 Observatii:
-- Crawler-ului ii ia in medie 7 min si 20 de sec sa extraga info
+- Crawler-ului ii ia in 3-4 minute sa extraga informatiile.
