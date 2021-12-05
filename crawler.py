@@ -6,15 +6,17 @@ from selenium import webdriver
 
 class Crawler:
     def __init__(self):
+        self.stats = []
         self.driver = webdriver.Chrome(executable_path=r"SeleniumDrivers\chromedriver.exe")
-        self.driver.implicitly_wait(1)
         self.url = 'https://www.forbes.com/billionaires/'
 
     def start(self):
         self.driver.get(self.url)
         self.driver.find_element_by_id('truste-consent-button').click()
+        self.driver.implicitly_wait(10)
 
         self.soup = BeautifulSoup(self.driver.page_source, 'lxml')
+        self.driver.implicitly_wait(5)
         urls, name = self.extractUrlsFromTable()
         self.extractFromProfile(urls, name)
 
@@ -47,11 +49,7 @@ class Crawler:
         return urls, name
 
     def extractFromProfile(self, urls, name):
-        # ######################################
-        # Testez pe primii 50/200 pentru nereguli
-        # #####################################
 
-        stats = []
         age = [None] * 200
         source_of_wealth = [None] * 200
         self_made_score = [None] * 200
@@ -64,7 +62,7 @@ class Crawler:
 
         for i in range(200):
             self.driver.get(urls[i])
-            time.sleep(1)
+            # time.sleep(1)
             soup = BeautifulSoup(self.driver.page_source, 'lxml')
             block = soup.find('div', attrs={'class': 'listuser-content__block person-stats'})
             for item in block.find_all('div', attrs={'class': 'listuser-block__item'}):
@@ -87,12 +85,15 @@ class Crawler:
                 elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Education':
                     education[i] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
 
-        stats.extend(
+        self.stats.extend(
             [name, age, source_of_wealth, self_made_score, philanthropy_score, residence, citizenship, marital_status,
              children, education])
 
-        for field in stats:
-            print(field)
+    def exportExtractedStats(self):
+        # for field in self.stats:
+        #     print(field)
+
+        return self.stats
 
     def stop(self):
         self.driver.quit()
