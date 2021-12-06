@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 class Crawler:
@@ -25,7 +26,7 @@ class Crawler:
         driver = webdriver.Chrome(executable_path=r"SeleniumDrivers\chromedriver.exe")
         url = 'https://www.forbes.com/billionaires/'
         driver.get(url)
-        driver.find_element_by_id('truste-consent-button').click()
+        driver.find_element(By.ID, 'truste-consent-button').click()
         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
 
         soup = BeautifulSoup(driver.page_source, 'lxml')
@@ -64,9 +65,11 @@ class Crawler:
             elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Source of Wealth':
                 self.source_of_wealth[index] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
             elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Self-Made Score':
-                self.self_made_score[index] = int((item.find('span', attrs={'class': 'profile-stats__text'}).get_text()))
+                self.self_made_score[index] = int(
+                    (item.find('span', attrs={'class': 'profile-stats__text'}).get_text()))
             elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Philanthropy Score':
-                self.philanthropy_score[index] = int((item.find('span', attrs={'class': 'profile-stats__text'}).get_text()))
+                self.philanthropy_score[index] = int(
+                    (item.find('span', attrs={'class': 'profile-stats__text'}).get_text()))
             elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Residence':
                 self.residence[index] = (item.find('span', attrs={'class': 'profile-stats__text'}).get_text())
             elif item.find('span', attrs={'class': 'profile-stats__title'}).get_text() == 'Citizenship':
