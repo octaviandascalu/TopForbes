@@ -3,6 +3,14 @@ import mysql.connector
 
 class DbConnection:
     def __init__(self):
+        db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd='0000'
+        )
+        mycursor = db.cursor()
+        mycursor.execute("CREATE DATABASE IF NOT EXISTS forbes")
+
         self.db = mysql.connector.connect(
             host="localhost",
             user="root",
